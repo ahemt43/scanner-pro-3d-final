@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Kodu çek
+      - name: Repo çek
         uses: actions/checkout@v4
 
       - name: Flutter kur
@@ -18,14 +18,22 @@ jobs:
         with:
           flutter-version: '3.22.0'
 
-      - name: Paketleri indir
-        run: flutter pub get
+      - name: Proje oluştur
+        run: flutter create app
 
-      - name: APK build et
-        run: flutter build apk --release
+      - name: Kodları kopyala
+        run: |
+          cp -r lib app/
+          cp pubspec.yaml app/
+
+      - name: Build yap
+        run: |
+          cd app
+          flutter pub get
+          flutter build apk --release
 
       - name: APK yükle
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
